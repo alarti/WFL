@@ -1,0 +1,213 @@
+<!-- ---------------------------------------------------------------------------
+|   Project:    WFL v 0.0.1
+|   Author:     Alberto Arce Rodríguez
+|   File:       index.html
+|   Date mod:   31/12/2012
+---------------------------------------------------------------------------- -->
+<!DOCTYPE html>
+<!--
+Carga de jQuery y librerías de apoyo
+-->
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <title>WFL</title>
+        <link rel="stylesheet" href="css/jquery.mobile-1.2.0.css" />
+        <script src="js/jquery-1.8.3.js"></script>
+        <script src="js/jquery.mobile-1.2.0.js"></script>
+        <script src="js/knockout-2.1.0.js"></script>
+        <script src="js/jsontree2nlistview.js" type="text/javascript"></script>
+        <script src="js/funciones.js" type="text/javascript"></script>
+        <script type="text/javascript" src="js/jsoneditor.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/jsoneditor.css">
+
+    </head>
+    <!--
+         Pagina de INICIO
+    -->
+    <div data-role="page" id="home" >
+        <div data-role="header" data-theme="b"> 
+            <h1>What's For Lunch?   (WFL)</h1>            
+            <h1><img id="wfl_logo" src="css/images/wfl_logo.png" alt="eat, food, grey, restaurant icon"></h1>            
+        </div>
+
+        <div data-role="content">
+            <ul class="querydef" data-bind="listview: true, template: {name: 'childTmpl', foreach: Tree}">
+            </ul>
+            <script id="childTmpl" type="text/html" >
+                <li>
+                    <span data-bind="text: Name"> </span>
+                    <ul class="queryapp"  data-bind="listview: true, template: {name: 'childTmpl', foreach: Children}">
+                    </ul>
+                </li>
+                </script>
+            </div>
+
+            <!--
+                 Barra de navegacion
+            -->
+            <div data-role="footer"  data-position="fixed" data-id="nav" data-theme="a">
+                <div data-role="navbar"> 
+                    <ul>
+                        <li><a href="#find">Búsqueda</a></li>
+                        <li><a href="#options">Opciones</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                    <h3> &copy; 2012 Multimedia Unileon </h3>
+                </div>
+            </div>
+        </div>
+        <!--
+         Formulario ABOUT
+        -->
+        <div data-role="dialog" id="about" data-close-btn-text="Cerrar el dialogo">
+            <div data-role="header">
+                <h1>About This App</h1>
+            </div>
+            <div data-role="content">
+                <h1 style="text-align: center;">About This App</h1>
+                <p style="text-align: center;">Esta aplicación ha sido diseñada
+                    para la asignatura de multimedia de 4º curso de la Universidad de León. <br>
+                    <br>
+                    Autor: Alberto Arce Rodríguez <br><br>
+                    Más info: <a href="http://es.linkedin.com/in/albertoarce">http://es.linkedin.com/in/albertoarce</a> 
+                </p>
+                <p><a href="#home" data-role="button" data-rel="back">OK</a></p>
+            </div>
+        </div>
+        <!--
+         Formulario BUSQUEDA RÁPIDA
+        -->
+        <div data-role="dialog" id="find" data-close-btn-text="Volver">
+            <div data-role="header">
+                <h1>Búsqueda rápida</h1>
+            </div>
+            <div data-role="content">
+                <h1 style="text-align: center;">Búsqueda rápida</h1>
+                <p style="text-align: center;">
+                    <a> Introduzca uno o varios términos culinarios para realizar la búsqueda</a>
+                </p>
+                <div>
+                    <input type='hidden' id="youtubepage" name='index' value='1' />
+                    <h2>Buscar Videos</h2>
+                    <input type="search" name="video_search" id="vid_srch_txt" data-mini="true" />
+                    <a href="#youtube_vidsp" data-role="button" id ="vid_srch_but" data-inline="true">Buscar</a>
+                    <a href="#home" data-role="button" data-rel="back" data-inline="true">Cancelar</a>                    
+                </div>
+            </div>
+        </div>
+        <!--
+         Formulario RESULTADOS DE VIDEOS
+        -->
+        <div data-role="dialog" id="youtube_vidsp" data-close-btn-text="Volver" data-theme="b">
+            <div data-role="header">
+                <h1>Recetario:</h1>
+            </div>
+            <p style="text-align: center;">
+                <a id="youtube_vids"></a>
+            </p>
+            <a href="#home" data-role="button" data-rel="back" data-inline="true">Cancelar</a> 
+            <a href="javascript:buscaryotube(-1);" data-role="button" data-inline="true" data-icon="arrow-l">Anterior</a>
+            <a href="javascript:buscaryotube(1);" data-role="button" data-inline="true" data-icon="arrow-r">Siguiente</a>        
+            <a href="#video_options" data-role="button" data-icon="gear"  data-inline="true"></a> 
+        </div>
+        <!--
+         Formulario OPCIONES GENERALES
+        -->
+        <div data-role="dialog" id="options" data-close-btn-text="Volver">
+            <div data-role="header">
+                <h1>Opciones</h1>
+            </div>
+            <div data-role="content">
+                <a href="#video_options" data-role="button" id ="video_options" data-inline="true" data-icon="grid">Opciones de video</a>
+                <a href="#json_editor" data-role="button" id ="json_editor" data-inline="true" data-icon="edit">Editor de Menú</a>
+            </div>
+        </div>
+        <!--
+         Formulario OPCIONES DE VIDEO
+        -->
+        <div data-role="dialog" id="video_options" data-close-btn-text="Volver">
+            <div data-role="header">
+                <h1>Opciones de video</h1>
+            </div> 
+            <div data-role="content">
+                <p style="text-align: center;">
+                    <label for="slider-w">Max. Weight Video:</label>
+                    <input type="range" name="slider-w" id="MaxW" value="200" min="66" max="640" />
+                    <br>
+                    <label for="slider-h">Max. Height Video:</label>
+                    <input type="range" name="slider-h" id="MaxH" value="150" min="50" max="480" />                
+                </p>
+            </div>
+        </div>
+        <!--
+         Formulario EDITOR DE MENU
+        -->
+        <div data-role="page" id="json_editor" data-theme="e ">
+            <div data-role="header">
+                <h1>Editor de Json</h1>
+            </div> 
+            <div data-role="content">
+                <p style="text-align: center;">
+                    <a> Introduzca el texto del json según esquema:</a>
+                <p>"Name": "Padre",
+                    "Children": [
+                    {
+                    Name:Hijo1,
+                    Children:Null},
+                    {
+                    Name:Hijo2,
+                    Children:Null
+                    }
+                    ]
+                </p> 
+                <div>
+                    <p>
+                        <a href="#SaveDialog" data-role="button" data-inline="true">Guardar Menu</a>
+                        <a href="#ReinitDialog" data-role="button" data-inline="true">Limpiar Menu</a>
+                    </p>
+                    <div id="jsoneditor" style="width: 100%; height: 100%;"></div>
+
+                    <script type="text/javascript" >
+                        // create the editor. Optionally, parameters json and options can be
+                        // specified in the constructor.
+                        var container = document.getElementById("jsoneditor");
+                        var editor = new JSONEditor(container);
+
+                    </script>
+
+                </div>
+
+            </div>
+        </div>
+        <!--
+         SubFormulario GUARDAR MENU
+        -->
+        <div data-role="dialog" id="SaveDialog">
+            <div data-role="header" data-theme="a" class="ui-corner-top">
+                <h1>Guardar los cambios en el Menú?</h1>
+            </div>
+            <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                <h3 class="ui-title">¿Sobreescribir menú almacenado en local?</h3>
+                <p>Puedes recuperar el menú original desde el botón "Limpiar Menu".</p>
+                <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancelar</a>    
+                <button onclick="saveJSON();" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Guardar</button>  
+            </div>
+        </div>
+        <!--
+         SubFormulario REINICIAR MENU
+        -->
+        <div data-role="dialog" id="ReinitDialog">
+            <div data-role="header" data-theme="a" class="ui-corner-top">
+                <h1>Reiniciar los cambios en el Menú?</h1>
+            </div>
+            <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                <h3 class="ui-title">Se eliminarán los cambios realizados y se recargará el menú por defecto</h3>
+                <p>¿Deseas continuar?.</p>
+                <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancelar</a>    
+                <button onclick="reinitJSON();" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Reiniciar Menu</button>  
+            </div>
+        </div>
+    </body>
+</html>
